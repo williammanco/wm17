@@ -2,16 +2,13 @@
   "name": "wm17",
   "version": "0.0.1",
   "description": "Personal website williamman.co - '17 - coming soon",
-  "main": "src/app.js",
+  "main": "src/client/index.js",
   "homepage": "https://williamman.co",
   "author": "William Manco",
   "license": "GPL3",
   "repository": {
     "type": "git",
     "url": "git@github.com:williammanco/wm17.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hungpham-pyco/reactjs/issues"
   },
   "browserslist": [
     "> 1%"
@@ -20,7 +17,7 @@
     "start": "yarn dev:wds",
     "build": "yarn prod:build",
     "dev:wds": "webpack-dashboard -- webpack-dev-server",
-    "prod:build": "rimraf lib && babel src -d lib --ignore .test.js && BABEL_ENV=production webpack --progress",
+    "prod:build": "rimraf lib && babel src -d lib --ignore .test.js && NODE_ENV=production webpack --progress",
     "prod:start": "cross-env NODE_ENV=production pm2 start lib/server && pm2 logs",
     "prod:stop": "pm2 delete server",
     "start:documentation": "documentation serve --watch --shallow src/**",

@@ -7,14 +7,7 @@ import DashboardPlugin from 'webpack-dashboard/plugin'
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 
-const html = new HtmlWebpackPlugin({
-  template: __dirname + '/src/client/index.html'
-})
-const uglify = new UglifyJSPlugin({
-  compress: {
-    warnings: false
-  }
-})
+
 let config = {
   entry:  __dirname + "/src/client/index.js",
   output: {
@@ -60,26 +53,27 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   config.devtool = false;
   config.plugins = [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({comments: false}),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    }),
     new webpack.DefinePlugin({
       'process.env': {NODE_ENV: JSON.stringify('production')}
-    })
-  ];
+    }),
+    new HtmlWebpackPlugin({
+      template: __dirname + '/src/client/index.html'
+    }),
+    new webpack.optimize.UglifyJsPlugin()
+  ]
 } else {
 	config.plugins = [
     new webpack.HotModuleReplacementPlugin(),
     new DashboardPlugin(),
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery",
-      THREE: "three",
-      "window.THREE": "three",
-      "window.$": "jquery",
-      "window.jQuery": "jquery"
-    }),
-    html
-  ];
+      jQuery: "jquery"
+    })
+  ]
 }
 
 module.exports = config

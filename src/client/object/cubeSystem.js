@@ -14,17 +14,12 @@ export default class CubeSystem extends Object3D{
     this.mesh.position.x = utils.getRandomArbitrary(-window.innerWidth/2,window.innerWidth/2)
     this.mesh.position.z = utils.getRandomArbitrary(-window.innerWidth/2,0)
     this.mesh.position.y = utils.getRandomArbitrary(-window.innerHeight/2,window.innerHeight/2)
-    this.mesh.opacity = 0
     this.add(this.mesh)
-
-
-
   }
 
 
-  update(delta) {
-    this.mesh.opacity += .05
-    this.mesh.rotation.x = delta*.9
-    this.mesh.rotation.y = Math.sin(delta*.3)
+  update(delta,factor) {
+    this.mesh.rotation.x = delta*(factor+.4)
+    this.mesh.rotation.y = Math.sin(delta*factor)
   }
 }
