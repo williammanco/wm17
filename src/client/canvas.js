@@ -71,8 +71,8 @@ export default class Canvas extends React.Component {
       ry = -Math.mapLinear(nx, -1, 1, cameraPanRange * -0.5, cameraPanRange * 0.5)
       rx = Math.mapLinear(ny, -1, 1, cameraYawRange * -0.5, cameraYawRange * 0.5)
     }else{
-      rx = -(x - 90) * 0.01
-      ry = -y * 0.03
+      rx = x * 0.01
+      ry = y * 0.03
     }
     TweenMax.to(this.camera.rotation, 2, {
       x: rx,
