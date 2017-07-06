@@ -37,6 +37,13 @@ let config = {
   devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      client_path: path.resolve(__dirname, 'src/client'),
+      objects_path: path.resolve(__dirname, 'src/client/objects'),
+      modules_path: path.resolve(__dirname, 'src/client/modules'),
+      shared_path: path.resolve(__dirname, 'src/shared/'),
+      assets_path: path.resolve(__dirname, 'src/client/assets/'),
+    },
   },
   devServer: {
     port: WDS_PORT,
@@ -71,7 +78,11 @@ if (process.env.NODE_ENV === 'production') {
     new DashboardPlugin(),
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
+      THREE: "three",
+      "window.THREE": "three",
+      "window.$": "jquery",
+      "window.jQuery": "jquery"
     })
   ]
 }
