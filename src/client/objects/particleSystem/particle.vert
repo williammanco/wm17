@@ -10,6 +10,7 @@
   uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ];
 #endif
 uniform float size;
+uniform float scale;
 attribute float alpha;
 attribute vec3 aColor;
 varying vec3 vColor;
@@ -19,6 +20,6 @@ void main() {
   vAlpha = alpha;
   vColor = aColor;
   vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-  gl_PointSize = 1.0 * ( 1000.0 / length( mvPosition.xyz ) );
+  gl_PointSize = (1.0 * scale) * ( 1000.0 / length( mvPosition.xyz ) );
   gl_Position = projectionMatrix * mvPosition;
 }

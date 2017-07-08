@@ -8,6 +8,7 @@ import settings from '../shared/settings.js'
 import ParticleSystem from './objects/particleSystem/'
 import Animals from './objects/animals/'
 import Sun from './objects/sun/'
+import Sky from './objects/sky/'
 
 //import Ground from './objects/ground/'
 //import TreeSphere from './objects/treeSphere/'
@@ -19,6 +20,12 @@ THREE.ShaderExtras = require('imports-loader?THREE=three!exports-loader?THREE.Sh
 THREE.ShaderPass = require('imports-loader?THREE=three!exports-loader?THREE.ShaderPass!three/examples/js/postprocessing/ShaderPass');
 THREE.BloomPass = require('imports-loader?THREE=three!exports-loader?THREE.BloomPass!three/examples/js/postprocessing/BloomPass')
 
+const particleTree = require('assets_path/img/particle1.png')
+const particleCloud = [
+  require('assets_path/img/cloud10.png'),
+  require('assets_path/img/cloud9.png'),
+  require('assets_path/img/cloud8.png')
+]
 
 
 export default class Canvas extends React.Component {
@@ -46,6 +53,7 @@ export default class Canvas extends React.Component {
     hemiLight.groundColor.setHSL( 0.095, 1, 0.75 )
     hemiLight.position.set( 0, 500, 0 )
     this.scene.add( hemiLight )
+
 
     // COMPOSER
     this.renderer.autoClear = false
@@ -84,8 +92,34 @@ export default class Canvas extends React.Component {
     document.body.appendChild(this.renderer.domElement)
     // this.ground = new Ground()
     // this.scene.add(this.ground)
-    this.particleSystem = new ParticleSystem({ scene: this.scene })
-    this.scene.add(this.particleSystem)
+    this.particlesTree = new ParticleSystem({
+      scene: this.scene,
+      particle: particleTree,
+      xDensity: 500,
+      yDensity: 500,
+      yOffset: 0,
+      changeColor: true,
+      scale: 1,
+      noSolarize: 0
+    })
+    this.scene.add(this.particlesTree)
+    this.particlesCloud = new ParticleSystem({
+      scene: this.scene,
+      particle: particleCloud[2],
+      xDensity: 100,
+      yDensity: 10,
+      yOffset: 20,
+      scale: 1000,
+      noSolarize: 1
+    })
+    this.scene.add(this.particlesCloud)
+
+    // this.particleSystem = new ParticleSystem({ scene: this.scene, particle: particleTree })
+    // this.scene.add(this.particleSystem)
+
+    this.sky = new Sky()
+    this.scene.add(this.sky)
+
     this.animals = []
     for(let i = 0; i < 4; i++){
       self.animals[i] = new Animals({
@@ -145,7 +179,8 @@ export default class Canvas extends React.Component {
     let delta = this.clock.getDelta()
     this.time += 1/60
 
-    this.particleSystem.update()
+    this.particlesTree.update()
+    this.particlesCloud.update()
 
     for(let i = 0; i < 4; i++){
       this.animals[i].update(delta)

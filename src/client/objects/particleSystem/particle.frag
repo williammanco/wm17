@@ -5,6 +5,7 @@ varying vec3 vColor;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
+uniform float noSolarize;
 
 void main() {
   vec4 pixelref= texture2D( texture, gl_PointCoord );
@@ -25,7 +26,8 @@ void main() {
     float fogFactor = smoothstep( fogNear, fogFar, depth );
     gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
     float alphaColor = 1.0;
-    if(depth > 50.0){
+
+    if(depth > 50.0 && noSolarize != 1.0){
       alphaColor = smoothstep( 1.0, 0.0, (depth-50.0)*0.1 );
     }
     gl_FragColor.a += smoothstep( 1.0, 0.0, alphaColor );

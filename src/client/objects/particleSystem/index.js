@@ -7,7 +7,7 @@ import state from 'shared_path/state'
 
 const vert = require('./particle.vert')
 const frag = require('./particle.frag')
-const particleImage = require('./particle1.png')
+
 
 export default class ParticleSystem extends Object3D {
   constructor(props) {
@@ -25,15 +25,15 @@ export default class ParticleSystem extends Object3D {
       z: 100,
     }
     this.particlesCountText = 0
-
-
-    let xs = 500
-    let ys = 500
+    let particleImage = this.props.particle
+    let yOffset = this.props.yOffset
+    let changeColor = this.props.changeColor
+    let xs = this.props.xDensity
+    let ys = this.props.yDensity
     this.particlesCount = xs * ys
     this.positions = new Float32Array(this.particlesCount * 3)
     this.alpha = new Float32Array(this.particlesCount * 1)
     this.aColor = new Float32Array(this.particlesCount * 3)
-
 
     this.depthLoop = 100
     let randomSpread = 1.9
@@ -50,7 +50,7 @@ export default class ParticleSystem extends Object3D {
       for (let y = 0; y < ys; y++) {
         let yv = y / ys - 0.5
         plane.position.x = xv * 400 + Math.random() * randomSpread * 2
-        plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random()
+        plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random() + yOffset
         plane.position.z = yv * this.depthLoop
         plane.userData = {x: plane.position.x, z: plane.position.z, y: plane.position.y, scaleY: plane.scale.y }
 
@@ -67,9 +67,16 @@ export default class ParticleSystem extends Object3D {
       this.positions[j + 1] = particle[i].y
       this.positions[j + 2] = particle[i].z
       this.alpha[i] = 1
-      this.aColor[j + 0] = 1.6-Math.random()
-      this.aColor[j + 1] = 1.6-Math.random()
-      this.aColor[j + 2] = 1.6-Math.random()
+      if(changeColor){
+        this.aColor[j + 0] = 1.6-Math.random()
+        this.aColor[j + 1] = 1.6-Math.random()
+        this.aColor[j + 2] = 1.6-Math.random()
+      }else{
+        let uniformRandom = Math.random()
+        this.aColor[j + 0] = 1.6-uniformRandom
+        this.aColor[j + 1] = 1.6-uniformRandom
+        this.aColor[j + 2] = 1.6-uniformRandom
+      }
     }
 
     this.geom = new BufferGeometry()
@@ -84,18 +91,15 @@ export default class ParticleSystem extends Object3D {
     state.textures.particle.needsUpdate = true
     state.textures.particle.premultiplyAlpha = true
 
-    console.log('fog',{
-      'color': this.props.scene.fog.color,
-      'near': this.props.scene.fog.near,
-      'far': this.props.scene.fog.far
-    })
-
+  
     this.mat = new ShaderMaterial({
       vertexShader: vert,
       fragmentShader: frag,
       uniforms: {
         texture: { type: 't', value: state.textures.particle },
         color: { type: 'c', value: new Color(0xffffff) },
+        scale: { type: 'f', value: this.props.scale },
+        noSolarize: { type: 'f', value: this.props.noSolarize },
         topColor:    { type: "c", value: new Color( 0x0077ff ) },
         bottomColor: { type: "c", value: new Color( 0xffffff ) },
         offset:      { type: "f", value: 33 },
