@@ -79,11 +79,11 @@ export default class ParticleSystem extends Object3D {
       }
     }
 
-    this.geom = new BufferGeometry()
-    this.geom.addAttribute('position', new BufferAttribute(this.positions, 3))
-    this.geom.addAttribute('alpha', new BufferAttribute(this.alpha, 1))
-    this.geom.addAttribute('aColor', new BufferAttribute(this.aColor, 3))
-    this.geom.computeBoundingSphere()
+    this.geometry = new BufferGeometry()
+    this.geometry.addAttribute('position', new BufferAttribute(this.positions, 3))
+    this.geometry.addAttribute('alpha', new BufferAttribute(this.alpha, 1))
+    this.geometry.addAttribute('aColor', new BufferAttribute(this.aColor, 3))
+    this.geometry.computeBoundingSphere()
 
     state.textures.particle = new TextureLoader().load(particleImage)
     state.textures.particle.minFilter = LinearMipMapLinearFilter
@@ -91,7 +91,7 @@ export default class ParticleSystem extends Object3D {
     state.textures.particle.needsUpdate = true
     state.textures.particle.premultiplyAlpha = true
 
-  
+
     this.mat = new ShaderMaterial({
       vertexShader: vert,
       fragmentShader: frag,
@@ -116,7 +116,7 @@ export default class ParticleSystem extends Object3D {
       blendDst: OneMinusSrcAlphaFactor,
       blendEquation: AddEquation,
     })
-    this.particles = new Points(this.geom, this.mat)
+    this.particles = new Points(this.geometry, this.mat)
     this.add(this.particles)
   }
   update() {
