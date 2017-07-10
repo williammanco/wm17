@@ -18,6 +18,7 @@ let config = {
     rules: [
       { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: /node_modules/ },
       { test: /\.(png|jpg|json|mp3|eot|svg|ttf|woff|woff2)$/, loader: 'url-loader?limit=8192' }, // inline base64 URLs for <=8k images, direct URLs for the rest
+      { test: /(\.obj)$/, loader: 'url-loader'   },
       { test: /(\.glsl|\.frag|\.vert)$/, loader: 'raw-loader'   },
       { test: /(\.glsl|\.frag|\.vert)$/, loader: 'glslify' },
       { test: /\.sass$/, loader: 'style-loader!css-loader!sass-loader' }, // use ! to chain loaders
