@@ -1,5 +1,5 @@
 
-import { Object3D, Geometry, ImageUtils, LinearMipMapLinearFilter, Fog, ShaderMaterial, PlaneGeometry, Mesh } from 'three'
+import { Object3D, InstancedBufferGeometry, InstancedBufferAttribute, ImageUtils, LinearMipMapLinearFilter, Fog, ShaderMaterial, PlaneGeometry, Mesh } from 'three'
 import settings from 'shared_path/settings'
 import utils from 'shared_path/utils'
 import state from 'shared_path/state'
@@ -16,7 +16,6 @@ export default class Clouds extends Object3D {
     super()
     const self = this
     this.props = props
-    this.geometry = new Geometry()
     this.texture = ImageUtils.loadTexture( self.props.image, null, () => self.updateReady = true )
 		this.texture.minFilter = LinearMipMapLinearFilter
     this.fog = new Fog( 0x4584b4, - 100, 3000 )
@@ -33,25 +32,32 @@ export default class Clouds extends Object3D {
       depthTest: false,
       transparent: true,
 		})
-		this.plane = new Mesh( new PlaneGeometry( 64, 64 ) )
 
-    for ( var i = 0; i < 8000; i++ ) {
-
-      self.plane.position.x = Math.random() * 1000 - 500;
-      self.plane.position.y = - Math.random() * Math.random() * 200 - 15;
-      self.plane.position.z = i;
-      self.plane.rotation.z = Math.random() * Math.PI;
-      self.plane.scale.x = self.plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
-
-      self.geometry.merge( self.geometry, self.plane )
+    this.geometry = new InstancedBufferGeometry()
+    this.geometry.copy( new PlaneGeometry(64, 64) )
+    this.particleCount = 50
+    let translateArray = new Float32Array( this.particleCount * 3 )
+    for ( let i = 0, j = 0, l = this.particleCount; i < l; i ++, j += 3 ) {
+      translateArray[ j + 0 ] = Math.random() * 1000 - 500
+      translateArray[ j + 1 ] = - Math.random() * Math.random() * 200 - 15
+      translateArray[ j + 2 ] = i
     }
+    let scaleArray = new Float32Array( this.particleCount * 2 )
+    for ( let i = 0, j = 0, l = this.particleCount; i < l; i ++, j += 2 ) {
+      scaleArray[ j + 0 ] = Math.random() * Math.PI
+      scaleArray[ j + 1 ] = Math.random() * Math.random() * 1.5 + 0.5
+    }
+    this.geometry.addAttribute( "translate", new InstancedBufferAttribute( translateArray, 3, 1 ) )
+    this.geometry.addAttribute( "scale", new InstancedBufferAttribute( scaleArray, 2, 1 ) )
 
 		this.mesh = new Mesh( self.geometry, self.material )
-
     this.add(self.mesh)
   }
 
   update(){
+    const self = this
+    if(self.updateReady){
 
+    }
   }
 }
