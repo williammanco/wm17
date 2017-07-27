@@ -15,7 +15,8 @@ export default class Animals extends Object3D {
     const self = this
     let loader = new JSONLoader()
     self.props = props
-    loader.load(parrot, function( geometry ) {
+    self.animals = [parrot, flamingo, stork]
+    loader.load(self.animals[self.props.index], function( geometry ) {
       self.mesh = new THREE.Mesh( geometry, new MeshLambertMaterial( {
             vertexColors: FaceColors,
             morphTargets: true
@@ -57,8 +58,8 @@ export default class Animals extends Object3D {
         self.animation.update( delta )
       }
       self.mesh.position.z -= delta * self.props.limitSpeed
-      if ( self.mesh.position.z  < -100 )  {
-        self.mesh.position.z = 100 + Math.random() * 100;
+      if ( self.mesh.position.z  < -30 )  {
+        self.mesh.position.z = 50 + Math.random() * 100
       }
     }
 

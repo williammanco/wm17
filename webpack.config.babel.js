@@ -62,7 +62,11 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins = [
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
+      THREE: "three",
+      "window.THREE": "three",
+      "window.$": "jquery",
+      "window.jQuery": "jquery"
     }),
     new webpack.DefinePlugin({
       'process.env': {NODE_ENV: JSON.stringify('production')}

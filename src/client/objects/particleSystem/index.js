@@ -5,14 +5,14 @@ import settings from 'shared_path/settings'
 import utils from 'shared_path/utils'
 import state from 'shared_path/state'
 
-const vert = require('./particle.vert')
-const frag = require('./particle.frag')
-
+const vert = require('./main.vert')
+const frag = require('./main.frag')
 
 export default class ParticleSystem extends Object3D {
   constructor(props) {
     super()
     this.props = props
+    const self = this
 
     settings.explodeStart = false
     this.velocity = {
@@ -61,6 +61,8 @@ export default class ParticleSystem extends Object3D {
         particle.push(plane.userData)
       }
     }
+    this.bufferParticle = particle
+
     for (let i = 0, j = 0; i < particle.length; i += 1, j += 3) {
 
       this.positions[j + 0] = particle[i].x
@@ -91,24 +93,31 @@ export default class ParticleSystem extends Object3D {
     state.textures.particle.needsUpdate = true
     state.textures.particle.premultiplyAlpha = true
 
-  
-    this.mat = new ShaderMaterial({
-      vertexShader: vert,
-      fragmentShader: frag,
-      uniforms: {
-        texture: { type: 't', value: state.textures.particle },
+    let uniforms = THREE.UniformsUtils.merge([
+      THREE.UniformsLib['lights'],
+      {
+        diffuse: { type: 'c', value: new Color(0xff00ff) },
         color: { type: 'c', value: new Color(0xffffff) },
-        scale: { type: 'f', value: this.props.scale },
-        noSolarize: { type: 'f', value: this.props.noSolarize },
+        scale: { type: 'f', value: self.props.scale },
+        noSolarize: { type: 'f', value: self.props.noSolarize },
         topColor:    { type: "c", value: new Color( 0x0077ff ) },
         bottomColor: { type: "c", value: new Color( 0xffffff ) },
         offset:      { type: "f", value: 33 },
         exponent:    { type: "f", value: 0.2 },
-        fogColor:    { type: "c", value: this.props.scene.fog.color },
-        fogNear:     { type: "f", value: this.props.scene.fog.near },
-        fogFar:      { type: "f", value: this.props.scene.fog.far }
+        fogColor:    { type: "c", value: self.props.scene.fog.color },
+        fogNear:     { type: "f", value: self.props.scene.fog.near },
+        fogFar:      { type: "f", value: self.props.scene.fog.far },
       },
-      // lights:true,
+    ])
+    uniforms.texture = { type: 't', value: state.textures.particle }
+
+
+
+    this.mat = new ShaderMaterial({
+      vertexShader: vert,
+      fragmentShader: frag,
+      uniforms: uniforms,
+      lights:true,
       fog: true,
       transparent: true,
       blending: CustomBlending,
@@ -118,6 +127,9 @@ export default class ParticleSystem extends Object3D {
     })
     this.particles = new Points(this.geom, this.mat)
     this.add(this.particles)
+  }
+  getBufferParticle(){
+    return this.bufferParticle
   }
   update() {
     const positions = this.particles.geometry.attributes.position.array

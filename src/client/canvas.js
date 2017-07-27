@@ -5,10 +5,12 @@ import React from 'react'
 import { Scene, Math, PointLight, WebGLRenderer, Clock, PerspectiveCamera, Fog } from 'three/src/Three'
 import { TweenMax, Power4 } from 'gsap'
 import settings from '../shared/settings.js'
+import utils from '../shared/utils.js'
 import ParticleSystem from './objects/particleSystem/'
 import Animals from './objects/animals/'
 import Sun from './objects/sun/'
 import Sky from './objects/sky/'
+// import Clouds from './objects/clouds/'
 
 //import Ground from './objects/ground/'
 //import TreeSphere from './objects/treeSphere/'
@@ -103,6 +105,12 @@ export default class Canvas extends React.Component {
       noSolarize: 0
     })
     this.scene.add(this.particlesTree)
+
+    // this.particlesCloud = new Clouds({
+    //   image: particleCloud[2]
+    // })
+    // this.scene.add(this.particlesCloud)
+
     this.particlesCloud = new ParticleSystem({
       scene: this.scene,
       particle: particleCloud[2],
@@ -114,8 +122,8 @@ export default class Canvas extends React.Component {
     })
     this.scene.add(this.particlesCloud)
 
-    // this.particleSystem = new ParticleSystem({ scene: this.scene, particle: particleTree })
-    // this.scene.add(this.particleSystem)
+    this.particleSystem = new ParticleSystem({ scene: this.scene, particle: particleTree })
+    this.scene.add(this.particleSystem)
 
     this.sky = new Sky()
     this.scene.add(this.sky)
@@ -123,10 +131,11 @@ export default class Canvas extends React.Component {
     this.animals = []
     for(let i = 0; i < 4; i++){
       self.animals[i] = new Animals({
-        limitSpeed: 1 * window.Math.random() * 10,
+        limitSpeed: 1 * window.Math.random() * 5,
         x: -25 + window.Math.random() * 50,
-        y: window.Math.random() * 20,
-        z: 50 + window.Math.random()*10
+        y: 5 + window.Math.random() * 20,
+        z: 50 + window.Math.random()*10,
+        index: utils.getRandomIntInclusive(0,2)
       })
       self.scene.add(self.animals[i])
     }
