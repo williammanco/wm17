@@ -10,7 +10,7 @@ import ParticleSystem from './objects/particleSystem/'
 import Animals from './objects/animals/'
 import Sun from './objects/sun/'
 import Sky from './objects/sky/'
-// import Clouds from './objects/clouds/'
+import Clouds from './objects/clouds/'
 
 //import Ground from './objects/ground/'
 //import TreeSphere from './objects/treeSphere/'
@@ -106,10 +106,10 @@ export default class Canvas extends React.Component {
     })
     this.scene.add(this.particlesTree)
 
-    // this.particlesCloud = new Clouds({
-    //   image: particleCloud[2]
-    // })
-    // this.scene.add(this.particlesCloud)
+    this.particlesCloud = new Clouds({
+      image: particleCloud[2]
+    })
+    this.scene.add(this.particlesCloud)
 
     this.particlesCloud = new ParticleSystem({
       scene: this.scene,

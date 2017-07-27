@@ -42,13 +42,13 @@ export default class Clouds extends Object3D {
       translateArray[ j + 1 ] = - Math.random() * Math.random() * 200 - 15
       translateArray[ j + 2 ] = i
     }
-    let scaleArray = new Float32Array( this.particleCount * 2 )
+    let scaleAndRotationArray = new Float32Array( this.particleCount * 2 )
     for ( let i = 0, j = 0, l = this.particleCount; i < l; i ++, j += 2 ) {
-      scaleArray[ j + 0 ] = Math.random() * Math.PI
-      scaleArray[ j + 1 ] = Math.random() * Math.random() * 1.5 + 0.5
+      scaleAndRotationArray[ j + 0 ] = Math.random() * Math.random() * 1.5 + 0.5
+      scaleAndRotationArray[ j + 1 ] = Math.random() * Math.PI
     }
     this.geometry.addAttribute( "translate", new InstancedBufferAttribute( translateArray, 3, 1 ) )
-    this.geometry.addAttribute( "scale", new InstancedBufferAttribute( scaleArray, 2, 1 ) )
+    this.geometry.addAttribute( "scaleAndRotation", new InstancedBufferAttribute( scaleAndRotationArray, 2, 1 ) )
 
 		this.mesh = new Mesh( self.geometry, self.material )
     this.add(self.mesh)
