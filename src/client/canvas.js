@@ -92,13 +92,16 @@ export default class Canvas extends React.Component {
     this.props.onRef(this)
     const self = this
     document.body.appendChild(this.renderer.domElement)
-    // this.ground = new Ground()
-    // this.scene.add(this.ground)
+
+    /**
+     * Tree particles (point)
+     * @type {ParticleSystem}
+     */
     this.particlesTree = new ParticleSystem({
       scene: this.scene,
       particle: particleTree,
-      xDensity: 500,
-      yDensity: 500,
+      xDensity: 300,
+      yDensity: 300,
       yOffset: 0,
       changeColor: true,
       scale: 1,
@@ -106,28 +109,42 @@ export default class Canvas extends React.Component {
     })
     this.scene.add(this.particlesTree)
 
+    /**
+     * Cloud particles (instanced geometry)
+     * @type {Clouds}
+     */
     this.particlesCloud = new Clouds({
       image: particleCloud[2]
     })
+
     this.scene.add(this.particlesCloud)
 
-    this.particlesCloud = new ParticleSystem({
-      scene: this.scene,
-      particle: particleCloud[2],
-      xDensity: 100,
-      yDensity: 10,
-      yOffset: 20,
-      scale: 1000,
-      noSolarize: 1
-    })
-    this.scene.add(this.particlesCloud)
+    // this.particlesCloud = new ParticleSystem({
+    //   scene: this.scene,
+    //   particle: particleCloud[2],
+    //   xDensity: 200,
+    //   yDensity: 200,
+    //   yOffset: 10,
+    //   scale: 10,
+    //   noSolarize: true,
+    //   noForcedAlpha: true,
+    // })
+    // this.scene.add(this.particlesCloud)
 
-    this.particleSystem = new ParticleSystem({ scene: this.scene, particle: particleTree })
-    this.scene.add(this.particleSystem)
+    // this.particleSystem = new ParticleSystem({ scene: this.scene, particle: particleTree })
+    // this.scene.add(this.particleSystem)
 
+    /**
+     * Sky
+     * @type {Sky}
+     */
     this.sky = new Sky()
     this.scene.add(this.sky)
 
+    /**
+     * Animals
+     * @type {animals}
+     */
     this.animals = []
     for(let i = 0; i < 4; i++){
       self.animals[i] = new Animals({
@@ -139,9 +156,13 @@ export default class Canvas extends React.Component {
       })
       self.scene.add(self.animals[i])
     }
+
+    /**
+     * Sun
+     * @type {sun}
+     */
     this.sun = new Sun()
     this.scene.add(this.sun)
-
 
     this.isReady = true
     this.events()

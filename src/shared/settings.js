@@ -21,4 +21,7 @@ export default {
     start: 0,
     end: -400,
   },
+  clouds: {
+    speed: 3,
+  }
 }
