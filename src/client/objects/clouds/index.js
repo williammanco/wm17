@@ -1,5 +1,5 @@
 
-import { Object3D, InstancedBufferGeometry, InstancedBufferAttribute, ImageUtils, LinearMipMapLinearFilter, Fog, ShaderMaterial, PlaneBufferGeometry, Mesh } from 'three'
+import { Object3D, InstancedBufferGeometry, InstancedBufferAttribute, LinearMipMapLinearFilter, Fog, ShaderMaterial, PlaneBufferGeometry, Mesh } from 'three'
 import settings from 'shared_path/settings'
 import utils from 'shared_path/utils'
 import state from 'shared_path/state'
@@ -16,7 +16,7 @@ export default class Clouds extends Object3D {
     super()
     const self = this
     this.props = props
-    this.texture = ImageUtils.loadTexture( self.props.image, null, () => self.updateReady = true )
+    this.texture = self.props.texture
 		this.texture.minFilter = LinearMipMapLinearFilter
     this.fog = new Fog( 0xffffff, - 100, 3000 )
     this.material = new ShaderMaterial({
@@ -43,7 +43,7 @@ export default class Clouds extends Object3D {
     let translateArray = new Float32Array( this.particleCount * 3 )
     for ( let i = 0, j = 0, l = this.particleCount; i < l; i ++, j += 3 ) {
       translateArray[ j + 0 ] = -Math.random() * Math.random() * settings.world.width
-      translateArray[ j + 1 ] = (Math.random() * 400) + 200
+      translateArray[ j + 1 ] = (Math.random() * 400) + 100
       translateArray[ j + 2 ] = -i * 10
     }
     let scaleAndRotationArray = new Float32Array( this.particleCount * 2 )
@@ -60,7 +60,6 @@ export default class Clouds extends Object3D {
 
   update(){
     const self = this
-    if (!this.updateReady) { return false }
     let positions = self.mesh.geometry.attributes.aTranslate.array
     for (let i = 0, j = 0; i < this.particleCount; i += 1, j += 3) {
       positions[j + 2] += 2

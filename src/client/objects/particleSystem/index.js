@@ -49,14 +49,16 @@ export default class ParticleSystem extends Object3D {
       let xv = x / xs - 0.5
       for (let y = 0; y < ys; y++) {
         let yv = y / ys - 0.5
-        plane.position.x = xv * 400 + Math.random() * randomSpread * 2
-        plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random() + yOffset
-        plane.position.z = yv * this.depthLoop
-        plane.userData = {x: plane.position.x, z: plane.position.z, y: plane.position.y, scaleY: plane.scale.y }
+        // plane.position.x = xv * 400 + Math.random() * randomSpread * 2
+        // plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random() + yOffset
+        // plane.position.z = yv * this.depthLoop
+        //
+        plane.position.x = xv * xs * Math.random() //xv * 60 + Math.random() * randomSpread * 2
+        plane.position.y = yv * ys * Math.random()//-20
+        plane.position.z = yv
+        plane.userData = {x: plane.position.x,  y: plane.position.y,z: plane.position.z, scaleY: plane.scale.y + Math.random()}
 
-        // plane.position.x = xv * 60 + Math.random() * randomSpread * 2
-        // plane.position.y = ( Math.cos( yv * Math.PI * 8 ) + Math.sin( yv * Math.PI * 8 ) ) *10
-        // plane.position.z = x - 0.5
+
 
         particle.push(plane.userData)
       }
@@ -81,11 +83,12 @@ export default class ParticleSystem extends Object3D {
       }
     }
 
-    this.geom = new BufferGeometry()
-    this.geom.addAttribute('position', new BufferAttribute(this.positions, 3))
-    this.geom.addAttribute('alpha', new BufferAttribute(this.alpha, 1))
-    this.geom.addAttribute('aColor', new BufferAttribute(this.aColor, 3))
-    this.geom.computeBoundingSphere()
+  //  this.geometry = //new THREE.PlaneBufferGeometry( 100, 100, 180, 180 )
+  this.geometry = new BufferGeometry()
+  this.geometry.addAttribute('position', new BufferAttribute(this.positions, 3))
+    this.geometry.addAttribute('alpha', new BufferAttribute(this.alpha, 1))
+    this.geometry.addAttribute('aColor', new BufferAttribute(this.aColor, 3))
+    this.geometry.computeBoundingSphere()
 
     state.textures.particle = new TextureLoader().load(particleImage)
     state.textures.particle.minFilter = LinearMipMapLinearFilter
@@ -96,6 +99,10 @@ export default class ParticleSystem extends Object3D {
     let uniforms = THREE.UniformsUtils.merge([
       THREE.UniformsLib['lights'],
       {
+        time: { type: "f", value: 1.0 },
+        speed: { type: "f", value: 0.007 },
+        amplitude: { type: "f", value: 0.04 },
+        elevation: { type: "f", value: 7.0 },
         diffuse: { type: 'c', value: new Color(0xff00ff) },
         color: { type: 'c', value: new Color(0xffffff) },
         scale: { type: 'f', value: self.props.scale },
@@ -114,7 +121,7 @@ export default class ParticleSystem extends Object3D {
 
 
 
-    this.mat = new ShaderMaterial({
+    this.material = new ShaderMaterial({
       vertexShader: vert,
       fragmentShader: frag,
       uniforms: uniforms,
@@ -126,21 +133,25 @@ export default class ParticleSystem extends Object3D {
       blendDst: OneMinusSrcAlphaFactor,
       blendEquation: AddEquation,
     })
-    this.particles = new Points(this.geom, this.mat)
+    this.particles = new Points(this.geometry, this.material)
+    this.particles.rotation.x = -Math.PI / 2
+    this.particles.position.y = 0
     this.add(this.particles)
   }
   getBufferParticle(){
     return this.bufferParticle
   }
   update() {
-    const positions = this.particles.geometry.attributes.position.array
-    for (let i = 0, j = 0; i < this.particlesCount; i += 1, j += 3) {
-      positions[j + 2] += 0.2
-      if (positions[j + 2] > this.zone.z) {
-        positions[j + 2] = 0
-      }
-    }
+    // this.material.uniforms.time.value += 1
 
-    this.particles.geometry.attributes.position.needsUpdate = true
+    // const positions = this.particles.geometry.attributes.position.array
+    // for (let i = 0, j = 0; i < this.particlesCount; i += 1, j += 3) {
+    //   positions[j + 2] += 0.2
+    //   if (positions[j + 2] > this.zone.z) {
+    //     positions[j + 2] = 0
+    //   }
+    // }
+    //
+    // this.particles.geometry.attributes.position.needsUpdate = true
   }
 }
