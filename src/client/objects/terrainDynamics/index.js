@@ -18,7 +18,7 @@ export default class TerrainDynamics extends Object3D {
         time: { type: "f", value: 1.0 },
         speed: { type: "f", value: 0.007 },
         amplitude: { type: "f", value: 0.04 },
-        elevation: { type: "f", value: 7.0 },
+        elevation: { type: "f", value: 5.0 },
         noSolarize: { type: 'b', value: 1.0 },
         fogColor:    { type: "c", value: self.props.scene.fog.color },
         fogNear:     { type: "f", value: self.props.scene.fog.near },
@@ -29,7 +29,7 @@ export default class TerrainDynamics extends Object3D {
       fog: true,
       wireframe: false,
     })
-  	this.planeGeometry = new PlaneBufferGeometry( 120, 120, 50, 50 )
+  	this.planeGeometry = new PlaneBufferGeometry( 800, 800, 140, 140 )
   	this.meshTerrain = new Mesh( this.planeGeometry, this.material )
   	this.meshTerrain.rotation.x = -Math.PI / 2
   	this.meshTerrain.position.y = 0

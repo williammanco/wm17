@@ -9,7 +9,9 @@
   };
   uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ];
 #endif
-
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 //
 // GLSL textureless classic 2D noise "cnoise",
 // with an RSL-style periodic variant "pnoise".
@@ -122,20 +124,31 @@ varying vec3 vColor;
 varying float vAlpha;
 
 varying float displacement;
+varying float randSignValue;
 
+float randSign(float n){return sign(fract(sin(n) * 43758.5453123) * 2. - 1.);}
+
+
+float rands(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 void main() {
   vAlpha = alpha;
   vColor = aColor;
 
   displacement  = pnoise( amplitude * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * elevation;
-  float noise  = cnoise(position.xy) * 5.0;
-  vec3 newPosition = vec3(position.x + noise,position.y - noise,displacement);
+  displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
+  float noise = rands(vec2(position.z)) * 2.;
+  vec3 newPosition = vec3(position.x+noise,position.y+noise,displacement);
 
-  if(displacement < -2.0){
+  randSignValue = randSign(noise);
+
+  if(displacement < -1.8){
     newPosition.z = position.z - 5.;
   }
 
   vec4 mvPosition = modelViewMatrix * vec4( newPosition, 1.0 );
-  gl_PointSize = (1.0 * scale) * ( 1000.0 / length( mvPosition.xyz ) );
+  //mvPosition.y += rand(vec2(position.x));
+  gl_PointSize = (1.0 *(1. + noise)) * ( 1000.0 / length( mvPosition.xyz ) );
   gl_Position = projectionMatrix * mvPosition;
 }

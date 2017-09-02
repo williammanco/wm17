@@ -120,6 +120,8 @@ void main()
 {
   gl_PointSize = 4.;
   float displacement  = pnoise( amplitude * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * elevation;
+  displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
+
   vec3 newPosition = vec3(position.x,position.y,displacement);
   vec4 mvPosition = modelViewMatrix * vec4( newPosition, 1.0 );
   gl_Position      = projectionMatrix * mvPosition;

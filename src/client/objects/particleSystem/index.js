@@ -53,8 +53,8 @@ export default class ParticleSystem extends Object3D {
         // plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random() + yOffset
         // plane.position.z = yv * this.depthLoop
         //
-        plane.position.x = xv * xs * Math.random() //xv * 60 + Math.random() * randomSpread * 2
-        plane.position.y = yv * ys * Math.random()//-20
+        plane.position.x = xv * (xs * this.props.limit) //xv * 60 + Math.random() * randomSpread * 2
+        plane.position.y = yv * (ys * this.props.limit) //-20
         plane.position.z = yv
         plane.userData = {x: plane.position.x,  y: plane.position.y,z: plane.position.z, scaleY: plane.scale.y + Math.random()}
 
@@ -72,9 +72,9 @@ export default class ParticleSystem extends Object3D {
       this.positions[j + 2] = particle[i].z
       this.alpha[i] = 1
       if(changeColor){
-        this.aColor[j + 0] = 1.6-Math.random()
-        this.aColor[j + 1] = 1.6-Math.random()
-        this.aColor[j + 2] = 1.6-Math.random()
+        this.aColor[j + 0] = 1.6 - Math.random()
+        this.aColor[j + 1] = 1.6 - Math.random()
+        this.aColor[j + 2] = 1.6 - Math.random()
       }else{
         let uniformRandom = Math.random()
         this.aColor[j + 0] = 1.6-uniformRandom
@@ -90,11 +90,7 @@ export default class ParticleSystem extends Object3D {
     this.geometry.addAttribute('aColor', new BufferAttribute(this.aColor, 3))
     this.geometry.computeBoundingSphere()
 
-    state.textures.particle = new TextureLoader().load(particleImage)
-    state.textures.particle.minFilter = LinearMipMapLinearFilter
-    state.textures.particle.flipY = false
-    state.textures.particle.needsUpdate = true
-    state.textures.particle.premultiplyAlpha = true
+
 
     let uniforms = THREE.UniformsUtils.merge([
       THREE.UniformsLib['lights'],
@@ -102,7 +98,7 @@ export default class ParticleSystem extends Object3D {
         time: { type: "f", value: 1.0 },
         speed: { type: "f", value: 0.007 },
         amplitude: { type: "f", value: 0.04 },
-        elevation: { type: "f", value: 7.0 },
+        elevation: { type: "f", value: 5.0 },
         diffuse: { type: 'c', value: new Color(0xff00ff) },
         color: { type: 'c', value: new Color(0xffffff) },
         scale: { type: 'f', value: self.props.scale },
@@ -117,9 +113,17 @@ export default class ParticleSystem extends Object3D {
         fogFar:      { type: "f", value: self.props.scene.fog.far },
       },
     ])
-    uniforms.texture = { type: 't', value: state.textures.particle }
 
+    for(let i = 0; i<2; i++){
+      this.props.particles[i].minFilter = LinearMipMapLinearFilter
+      this.props.particles[i].needsUpdate = true
+      this.props.particles[i].premultiplyAlpha = true
+      this.props.particles[i].flipX = true
+      this.props.particles[i].flipY = true
+    }
 
+    uniforms.texture1 = { type: 't', value: this.props.particles[0] }
+    uniforms.texture2 = { type: 't', value: this.props.particles[1] }
 
     this.material = new ShaderMaterial({
       vertexShader: vert,
@@ -142,7 +146,7 @@ export default class ParticleSystem extends Object3D {
     return this.bufferParticle
   }
   update() {
-    // this.material.uniforms.time.value += 1
+     this.material.uniforms.time.value += 1
 
     // const positions = this.particles.geometry.attributes.position.array
     // for (let i = 0, j = 0; i < this.particlesCount; i += 1, j += 3) {
@@ -152,6 +156,6 @@ export default class ParticleSystem extends Object3D {
     //   }
     // }
     //
-    // this.particles.geometry.attributes.position.needsUpdate = true
+    this.particles.geometry.attributes.position.needsUpdate = true
   }
 }

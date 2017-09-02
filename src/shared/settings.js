@@ -7,7 +7,7 @@ export default {
     position: {
       x: 0,
       y: 10,
-      z: 60,
+      z: 400,
     },
   },
   mouse: {

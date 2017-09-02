@@ -2,7 +2,7 @@
 #include <envmap_pars_fragment>
 #include <logdepthbuf_pars_fragment>
 #include <fog_pars_fragment>
-// uniform vec3 color;
+uniform vec3 color;
 void main() {
   #include <logdepthbuf_fragment>
 

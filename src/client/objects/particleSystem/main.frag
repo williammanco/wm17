@@ -1,5 +1,6 @@
 uniform vec3 color;
-uniform sampler2D texture;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
 varying float vAlpha;
 varying vec3 vColor;
 varying float displacement;
@@ -10,14 +11,23 @@ uniform float fogFar;
 uniform bool noSolarize;
 uniform bool noForcedAlpha;
 
+float rand(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 void main() {
-  vec4 pixelref = texture2D( texture, gl_PointCoord );
 
-  if(displacement < -1.5){
+  vec4 pixelref = texture2D( texture1, vec2(gl_PointCoord.x, 1.- gl_PointCoord.y) );
+
+  if(rand(vec2(displacement)) > .5){
+    pixelref = texture2D( texture2, 1.0 - gl_PointCoord );
+  }
+  if(displacement < -5.){
     pixelref = vec4(0.0,0.0,0.0,0.0);
   }
-  if(pixelref.a<0.5) /*change threshold to desired output*/
+
+
+  if(pixelref.a<0.8) /*change threshold to desired output*/
   discard;
 
 
