@@ -151,8 +151,8 @@ export default class Canvas extends React.Component {
         this.textureParticleTree,
         this.textureParticleTreePalm,
       ],
-      xDensity: 600,
-      yDensity: 600,
+      xDensity: 500,
+      yDensity: 500,
       limit: 1.3,
       yOffset: 0,
       changeColor: true,
@@ -175,7 +175,9 @@ export default class Canvas extends React.Component {
      * @type {Object3D}
      */
     this.terrain = new TerrainDynamics({
-      scene: this.scene
+      scene: this.scene,
+      width: 700,
+      height: 700,
     })
     this.scene.add(this.terrain)
 

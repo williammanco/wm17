@@ -137,8 +137,9 @@ void main() {
   vColor = aColor;
 
   displacement  = pnoise( amplitude * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * elevation;
-  displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
-  float noise = rands(vec2(position.z)) * 2.;
+  // displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
+  // float noise = rands(vec2(position.z)) * 2.;
+  float noise = 2.;
   vec3 newPosition = vec3(position.x+noise,position.y+noise,displacement);
 
   randSignValue = randSign(noise);

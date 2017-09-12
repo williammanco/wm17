@@ -53,8 +53,8 @@ export default class ParticleSystem extends Object3D {
         // plane.position.y = (Math.sin(yv * Math.PI * 2) * Math.random() + Math.sin(xv *Math.PI*10 / 2) * 5.92) + Math.random() + yOffset
         // plane.position.z = yv * this.depthLoop
         //
-        plane.position.x = xv * (xs * this.props.limit) //xv * 60 + Math.random() * randomSpread * 2
-        plane.position.y = yv * (ys * this.props.limit) //-20
+        plane.position.x = xv * (xs * this.props.limit) + Math.random() * 20 //xv * 60 + Math.random() * randomSpread * 2
+        plane.position.y = yv * (ys * this.props.limit) + Math.random() * 20 //-20
         plane.position.z = yv
         plane.userData = {x: plane.position.x,  y: plane.position.y,z: plane.position.z, scaleY: plane.scale.y + Math.random()}
 
@@ -139,7 +139,7 @@ export default class ParticleSystem extends Object3D {
     })
     this.particles = new Points(this.geometry, this.material)
     this.particles.rotation.x = -Math.PI / 2
-    this.particles.position.y = 0
+    this.particles.position.y = .7
     this.add(this.particles)
   }
   getBufferParticle(){

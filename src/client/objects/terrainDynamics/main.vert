@@ -115,14 +115,19 @@ uniform float time;
 uniform float speed;
 uniform float elevation;
 uniform float amplitude;
+varying vec3 fNormal;
+
 
 void main()
 {
-  gl_PointSize = 4.;
   float displacement  = pnoise( amplitude * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * elevation;
-  displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
+  // displacement  += pnoise( (amplitude*30.0) * position.xy + vec2( 0, speed * time ), vec2( 100.0 ) ) * 0.5;
+  // float noise = rands(vec2(position.z)) * 2.;
+  float noise = 2.;
+  vec3 newPosition = vec3(position.x+noise,position.y+noise,displacement);
+  fNormal = normal;
 
-  vec3 newPosition = vec3(position.x,position.y,displacement);
+
   vec4 mvPosition = modelViewMatrix * vec4( newPosition, 1.0 );
   gl_Position      = projectionMatrix * mvPosition;
 }

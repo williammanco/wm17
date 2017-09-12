@@ -2,7 +2,7 @@ uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
 uniform bool noSolarize;
-
+varying vec3 fNormal;
 void main() {
 
   gl_FragColor = vec4( 0.0,0.0,0.0, 1. );
@@ -21,6 +21,11 @@ void main() {
       alphaColor = smoothstep( 1.0, 0.0, (depth-50.0)*0.1 );
     }
     gl_FragColor.a += smoothstep( 1.0, 0.0, alphaColor );
+
+//     if(any(lessThan(fNormal, vec3(0.0012)))){
+//     gl_FragColor += vec4(0.0, 1.0, 0.0, 1.0); // black
+// }
+
   #endif
 
 }

@@ -29,7 +29,7 @@ export default class TerrainDynamics extends Object3D {
       fog: true,
       wireframe: false,
     })
-  	this.planeGeometry = new PlaneBufferGeometry( 800, 800, 140, 140 )
+  	this.planeGeometry = new PlaneBufferGeometry( this.props.width, this.props.height, 100, 100 )
   	this.meshTerrain = new Mesh( this.planeGeometry, this.material )
   	this.meshTerrain.rotation.x = -Math.PI / 2
   	this.meshTerrain.position.y = 0
